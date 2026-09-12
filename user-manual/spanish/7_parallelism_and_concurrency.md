@@ -18,8 +18,8 @@ Se puede ver que los tipos de semántica de valor cumplen de forma natural el re
     1. Mediante el mecanismo de copy-on-write implementan semántica de valor; esos también cumplen el `Send trait`. Por ejemplo el tipo `String`: aunque internamente contiene un miembro puntero, su implementación garantiza “semántica de valor” mediante copy-on-write, así que ese tipo también cumple el `Send trait`. Para un tipo como `Vec<T>`, aunque también implementa copy-on-write, como lleva genéricos, si cumple `Send` tiene una condición previa. Si y solo si `T: Send`, entonces `Vec<T> : Send`.
     2. Mediante un mecanismo de sincronización de hilos se garantiza que el contenido al que apunta el puntero es thread-safe; esos también cumplen el `Send trait`. Por ejemplo el tipo `*AtomicInt32`: aunque puede ocurrir que punteros distintos en dos hilos apunten al mismo `AtomicInt32`, como `AtomicInt32` tiene sincronización de hilos, el tipo `*AtomicInt32` cumple el `Send trait`.
 
-Por tanto, introducimos además otro `Sync trait`, que representa que un tipo tiene en sí capacidad de sincronización de hilos. Entonces podemos decir que, para el tipo `*T`, si y solo si `T` cumple `Send + Sync`, `*T` cumple `Send`.
-Para los punteros borrow, igual. Si y solo si `T: Send + Sync`, entonces `&T : Send` y `&mut T : Send`.
+Por tanto, introducimos además otro `Sync trait`, que representa que un tipo tiene en sí capacidad de sincronización de hilos. Entonces podemos decir que, para el tipo `*T`, si y solo si `T` cumple `Sync`, `*T` cumple `Send`.
+Para los punteros borrow, igual. Si y solo si `T: Sync`, entonces `&T : Send` y `&mut T : Send`.
 
 Ejemplos de tipos que cumplen el `Sync trait`:
 1. Los tipos de la serie `Atomic`
