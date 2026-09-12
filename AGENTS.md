@@ -55,6 +55,7 @@ Each translated directory should include a `README.md` that states Chinese is th
 | 借用 | borrow | Types exist; there is **no borrow checker** |
 | 组件 | component | Compile unit; analogous to a Rust crate |
 | `.zno` | `.zno` | “Zinc oxide” header/interface file (SQLite) |
+| 指针 `*T` 的 `Send` | `*T: Send` iff `T: Sync` | Same for `&T` / `&mut T`. Not `Send + Sync`. Verified in the compiler (`is_send_type` for pointer-like types). |
 
 6. After translating, compare heading count, code-fence count, and `TODO` count with `user-manual/chinese/`.
 
@@ -69,4 +70,23 @@ New language-design writeups start from `proposals/00-template.zh.md` or `propos
 - Link the corresponding tracking issue.
 - Mention review nits (terminology consistency, untranslated comments that exist only in the source, TOC format) in the PR body instead of silently rewriting the source document.
 
-When working on translations, also read `.cursor/skills/zinc-docs-translation/SKILL.md`.
+## Translation workflow
+
+1. Identify the source chapter by numeric prefix (`0_` … `9_`, `99_`).
+2. Create or update `user-manual/<language>/<english-filename>.md` using the filename table above.
+3. Copy structure exactly: headings, lists, tables, details/summary blocks, images, and code fences.
+4. Translate prose only. Leave Zinc/Rust identifiers, APIs, and example typos unchanged.
+5. Translate comments inside code **only if** the Chinese source comment is Chinese. Keep comments that are already English in the source.
+6. Translate ASCII-diagram annotations; do not rename diagram field identifiers.
+7. Add or refresh `user-manual/<language>/README.md` stating that Chinese is canonical and listing every chapter.
+
+Before finishing a translation, check:
+
+- Same chapters as `user-manual/chinese/` (11 chapters + README)
+- Same number of code fences and `TODO` markers
+- Glossary terms match this file
+- No drive-by edits to other languages or to `proposals/` unless requested
+
+When a claim is about language behavior (types, keywords, std APIs, Send/Sync), verify it against the compiler and standard library in [zinc-lang/zinc](https://github.com/zinc-lang/zinc) (or a local clone). If the Chinese manual disagrees with the implementation, open an issue on the Chinese source instead of “fixing” only one translation.
+
+This file is editor-neutral. Do not add Cursor-only paths such as `.cursor/rules/`.
