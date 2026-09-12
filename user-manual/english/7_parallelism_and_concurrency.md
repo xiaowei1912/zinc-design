@@ -18,8 +18,8 @@ As you can see, value-semantic types naturally satisfy the `Send trait`. Example
     1. They implement value semantics through a copy-on-write mechanism; these also satisfy the `Send trait`. For example the `String` type: although it contains a pointer member internally, its implementation uses copy-on-write to guarantee "value semantics," so this type also satisfies the `Send trait`. For a type such as `Vec<T>`, although it also implements copy-on-write, because it is generic, whether it satisfies `Send` has a precondition. `Vec<T> : Send` if and only if `T: Send`.
     2. They guarantee that the pointed-to contents are thread-safe through a thread-synchronization mechanism; these also satisfy the `Send trait`. For example the `*AtomicInt32` type: although two different pointers in two threads may point at the same `AtomicInt32`, because `AtomicInt32` is thread-synchronized, the `*AtomicInt32` type satisfies the `Send trait`.
 
-Therefore we introduce another `Sync trait`, meaning that a type itself has thread-synchronization capability. Then we can say that for a `*T` type, `*T` satisfies `Send` if and only if `T` satisfies `Send + Sync`.
-The same applies to borrow pointers. `&T : Send` and `&mut T : Send` if and only if `T: Send + Sync`.
+Therefore we introduce another `Sync trait`, meaning that a type itself has thread-synchronization capability. Then we can say that for a `*T` type, `*T` satisfies `Send` if and only if `T` satisfies `Sync`.
+The same applies to borrow pointers. `&T : Send` and `&mut T : Send` if and only if `T: Sync`.
 
 Examples of types that satisfy the `Sync trait`:
 1. The `Atomic` family of types
