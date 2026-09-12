@@ -18,8 +18,8 @@ On peut constater qu'un type à sémantique de valeur satisfait naturellement le
     1. Via un mécanisme copy-on-write, une sémantique de valeur a été implémentée ; ceux-ci satisfont aussi le `Send trait`. Par exemple le type `String` : bien qu'il contienne un membre pointeur, son implémentation garantit une « sémantique de valeur » via copy-on-write, donc ce type satisfait aussi le `Send trait`. Pour un type comme `Vec<T>`, bien qu'il implémente aussi le copy-on-write, comme il porte un générique, le fait qu'il satisfasse `Send` est conditionnel. Si et seulement si `T: Send`, alors `Vec<T> : Send`.
     2. Via un mécanisme de synchronisation entre threads, le contenu pointé par le pointeur est thread-safe ; ceux-ci satisfont aussi le `Send trait`. Par exemple le type `*AtomicInt32` : bien que deux pointeurs dans deux threads puissent pointer vers le même `AtomicInt32`, comme `AtomicInt32` a une synchronisation entre threads, le type `*AtomicInt32` satisfait le `Send trait`.
 
-Nous introduisons donc un autre `Sync trait`, qui représente qu'un type possède lui-même une capacité de synchronisation entre threads. On peut alors dire que, pour un type `*T`, si et seulement si `T` satisfait `Send + Sync`, alors `*T` satisfait `Send`.
-Pour les pointeurs borrow, c'est analogue. Si et seulement si `T: Send + Sync`, alors `&T : Send` et `&mut T : Send`.
+Nous introduisons donc un autre `Sync trait`, qui représente qu'un type possède lui-même une capacité de synchronisation entre threads. On peut alors dire que, pour un type `*T`, si et seulement si `T` satisfait `Sync`, alors `*T` satisfait `Send`.
+Pour les pointeurs borrow, c'est analogue. Si et seulement si `T: Sync`, alors `&T : Send` et `&mut T : Send`.
 
 Exemples de types satisfaisant le `Sync trait` :
 1. Les types de la série `Atomic`
